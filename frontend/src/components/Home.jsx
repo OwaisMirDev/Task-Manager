@@ -16,7 +16,7 @@ export function Home() {
   return (
     <div className="grid grid-cols-5 place-items-center">
       {tasks.map((task) => (
-        <Card task={task} key={task._id} />
+        <Card task={task} key={task._id} setTasks={setTasks} />
       ))}
     </div>
   );

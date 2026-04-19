@@ -1,12 +1,13 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export function AddTask() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const { id } = useParams();
   const isEdit = Boolean(id);
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function getTask() {
@@ -29,20 +30,21 @@ export function AddTask() {
         title,
         description,
       });
-      setTitle("");
-      setDescription("");
     } else {
       await axios.post("http://localhost:3000/tasks/create", {
         title,
         description,
       });
-      setTitle("");
-      setDescription("");
     }
+    navigate("/");
+  }
+  async function handleDelete() {
+    await axios.delete(`http://localhost:3000/tasks/delete/${id}`);
+    navigate("/");
   }
   return (
     <>
-      <div className="border border-black text-center py-48 bg-rose-50">
+      <div className="text-center py-52 bg-rose-50">
         <form onSubmit={submitHandler}>
           <label htmlFor="title" className="block font-bold text-lg">
             Title
@@ -72,6 +74,14 @@ export function AddTask() {
             >
               {isEdit ? "Update" : "Submit"}
             </button>
+            {isEdit && (
+              <button
+                className="border mt-6 py-2 px-5 rounded-full bg-red-600 text-white cursor-pointer font-bold text-lg ml-3"
+                onClick={handleDelete}
+              >
+                Delete
+              </button>
+            )}
           </div>
         </form>
       </div>
