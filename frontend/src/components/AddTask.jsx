@@ -1,6 +1,7 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
+import { instance } from "../api/axios";
 
 export function AddTask() {
   const [title, setTitle] = useState("");
@@ -11,9 +12,7 @@ export function AddTask() {
 
   useEffect(() => {
     async function getTask() {
-      const response = await axios.get(
-        `http://localhost:3000/tasks/single/${id}`,
-      );
+      const response = await instance.get(`/tasks/single/${id}`);
       const task = response.data.task;
       setTitle(task.title);
       setDescription(task.description);
@@ -26,20 +25,27 @@ export function AddTask() {
   async function submitHandler(e) {
     e.preventDefault();
     if (isEdit) {
-      await axios.patch(`http://localhost:3000/tasks/update/${id}`, {
+      await instance.patch(`/tasks/update/${id}`, {
         title,
         description,
       });
     } else {
-      await axios.post("http://localhost:3000/tasks/create", {
-        title,
-        description,
-      });
+      try {
+        const response = await instance.post("/tasks/create", {
+          title,
+          description,
+        });
+        toast.success(response.message);
+        console.log(response);
+
+        navigate("/");
+      } catch (error) {
+        toast.error(<ul>{<li>{error.message}</li>}</ul>);
+      }
     }
-    navigate("/");
   }
   async function handleDelete() {
-    await axios.delete(`http://localhost:3000/tasks/delete/${id}`);
+    await instance.delete(`/tasks/delete/${id}`);
     navigate("/");
   }
   return (

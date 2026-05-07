@@ -1,9 +1,11 @@
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+
+import { instance } from "../api/axios";
+
 export function Card({ task, setTasks }) {
   const navigate = useNavigate();
   async function taskCompleteHandler(id) {
-    await axios.patch(`http://localhost:3000/tasks/done/${id}`);
+    await instance.patch(`/tasks/done/${id}`);
     setTasks((prev) =>
       prev.map((task) => (task._id === id ? { ...task, isDone: true } : task)),
     );

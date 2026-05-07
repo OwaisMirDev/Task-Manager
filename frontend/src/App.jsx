@@ -7,6 +7,7 @@ import {
 import { Layout } from "./Layout";
 import { Home } from "./components/Home";
 import { AddTask } from "./components/AddTask";
+import { ToastContainer } from "react-toastify";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -21,6 +22,7 @@ function App() {
   return (
     <>
       <RouterProvider router={router} />
+      <ToastContainer />
     </>
   );
 }
